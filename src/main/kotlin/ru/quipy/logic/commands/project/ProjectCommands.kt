@@ -4,6 +4,7 @@ import ru.quipy.api.aggregates.events.project.ProjectCreatedEvent
 import ru.quipy.api.aggregates.events.project.ProjectTitleChangedEvent
 import ru.quipy.api.aggregates.events.project.ProjectUserAddedEvent
 import ru.quipy.api.aggregates.events.project.ProjectUserRemovedEvent
+import ru.quipy.logic.commands.user.changeName
 import ru.quipy.logic.states.ProjectAggregateState
 import ru.quipy.logic.validation.ProjectAccessValidation.Companion.validateUserAccess
 import java.util.*
@@ -14,6 +15,11 @@ fun ProjectAggregateState.create(currentUserId: UUID, title: String): ProjectCre
 
 fun ProjectAggregateState.changeTitle(currentUserId: UUID, title: String): ProjectTitleChangedEvent {
     validateUserAccess(this, currentUserId)
+
+    if (this.title == title) {
+        throw java.lang.IllegalArgumentException("Project ${getId()} title can not be the same")
+    }
+
     return ProjectTitleChangedEvent(getId(), title)
 }
 

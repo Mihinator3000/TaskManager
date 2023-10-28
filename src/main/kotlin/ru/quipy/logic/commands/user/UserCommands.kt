@@ -17,5 +17,9 @@ fun UserAggregateState.changeName(currentUserId: UUID, userName: String?): UserN
         throw IllegalArgumentException("User $currentUserId can not change name of ${getId()}")
     }
 
+    if (this.userName == userName) {
+        throw IllegalArgumentException("User $currentUserId name can not be the same")
+    }
+
     return UserNameChangedEvent(currentUserId, userName)
 }
